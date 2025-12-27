@@ -2,23 +2,25 @@
 	include("header.php");
 	include("conn.php");
 
+	// fetch student data (GET request)
 	if (isset($_GET["id"])) {
+		// ID from link, `update.php?id=5`
 		$id = $_GET["id"];
 		$query = "SELECT * FROM `students` WHERE `id` = '$id'";
 		$result = mysqli_query($connection, $query);
 
-		if (!$result) {
-			die("query failed".mysqli_error());
-		} else {
+		if (!$result)
+			die("query failed" . mysqli_error());
+		else
 			$row = mysqli_fetch_assoc($result);
-		}
 	}
 
-	// remember that this should have the same value as indicated in name attribute
+	// remember that this should have the same value as indicated in name
+	// attribute
 	if (isset($_POST["update_student"])) {
-		if (isset($_GET["id_new"])) {
+		// ID from form below, `update.php?id_new=5`
+		if (isset($_GET["id_new"]))
 			$id_new = $_GET["id_new"];
-		}
 		$f_name = $_POST["f_name"];
 		$l_name = $_POST["l_name"];
 		$age = $_POST["age"];
@@ -26,14 +28,18 @@
 		$query = "UPDATE `students` SET `first_name` = '$f_name', `last_name` = '$l_name', `age` = '$age' WHERE `id` = '$id_new'";
 		$result = mysqli_query($connection, $query);
 
-		if (!$result) {
+		if (!$result)
 			die("query failed".mysqli_error());
-		} else {
+		else
+			// go back to index.php
 			header("location:index.php?update_msg=Successfully updated data");
-		}
 	}
 ?>
-<form action="update.php?id_new=<?php echo $id;?>" method="post">
+<!--
+after you make a POST request, redirect again to update.php with `id_new`, and
+then redirect again to index.php if successful
+-->
+<form action="update.php?id_new=<?php echo $id;?>" method="POST">
 	<div class="form-group">
 		<label for="f_name">First name</label>
 		<input type="text" name="f_name" class="form-control" value="<?php echo $row["first_name"]?>">
